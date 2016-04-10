@@ -1,0 +1,20 @@
+---
+- hosts: localhost
+  become: yes
+  tasks:
+
+  - yum: {name: docker}
+
+  - name: give default user docker access
+    user: {name: vagrant, groups: docker}
+
+  - name: turn off firewall
+    # firewalld was getting in the way of connecting to
+    # docker container secure server from the vagrant host
+    # https://docs.docker.com/v1.6/installation/centos/#firewalld
+    service: {name: firewalld, state: stopped, enabled: no}
+
+  # http://docs.ansible.com/ansible/docker_module.html
+  - name: launch openshift-origin process
+    when: no  # handled by a different provider currently
+...
